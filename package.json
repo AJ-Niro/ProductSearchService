@@ -17,6 +17,7 @@
     "migration:run": "npm run typeorm:cli migration:run -- -d src/config/typeorm.data-source.ts",
     "migration:revert": "npm run typeorm:cli migration:revert -- -d src/config/typeorm.data-source.ts",
     "migration:show": "npm run typeorm:cli migration:show -- -d ./src/config/typeorm.data-source.ts",
+    "factory": "ts-node src/database/factories/factory.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -25,6 +26,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.7.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
