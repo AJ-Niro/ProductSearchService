@@ -14,36 +14,33 @@ export class ProductPgRepository {
     return this.repo.count();
   }
 
-  async search(query: string, limit = 10, offset = 0): Promise<ProductPgEntity[]>{
+  async search(query: string, limit = 10, offset = 0): Promise<ProductPgEntity[]> {
 
-    const results = await this.repo.query(
-      `
-      SELECT
-        p.*,
-        c.name AS category_name,
-        l.name AS location_name,
-        (
-          CASE
-            WHEN LOWER(p.name) ILIKE LOWER('%' || $1 || '%') THEN 3
-            WHEN LOWER(c.name) ILIKE LOWER('%' || $1 || '%') THEN 2
-            WHEN LOWER(l.name) ILIKE LOWER('%' || $1 || '%') THEN 1
-            ELSE 0
-          END
-        ) AS relevance
-      FROM product p
-      INNER JOIN category c ON c.id = p.category_id
-      INNER JOIN location l ON l.id = p.location_id
-      WHERE
-        LOWER(p.name) ILIKE LOWER('%' || $1 || '%')
-        OR LOWER(c.name) ILIKE LOWER('%' || $1 || '%')
-        OR LOWER(l.name) ILIKE LOWER('%' || $1 || '%')
-      ORDER BY relevance DESC
-      LIMIT $2 OFFSET $3
-      `,
-      [query, limit, offset],
-    )
-    console.log(results[0])
-    return results
+    const qb = this.repo.createQueryBuilder('p')
+      .innerJoin('p.category', 'c')
+      .innerJoin('p.location', 'l')
+      .addSelect([
+        'c.name AS category_name',
+        'l.name AS location_name',
+        `
+        CASE
+          WHEN LOWER(p.name) ILIKE LOWER(:queryPattern) THEN 3
+          WHEN LOWER(c.name) ILIKE LOWER(:queryPattern) THEN 2
+          WHEN LOWER(l.name) ILIKE LOWER(:queryPattern) THEN 1
+          ELSE 0
+        END
+      AS relevance`,
+      ])
+      .where('LOWER(p.name) ILIKE LOWER(:queryPattern)')
+      .orWhere('LOWER(c.name) ILIKE LOWER(:queryPattern)')
+      .orWhere('LOWER(l.name) ILIKE LOWER(:queryPattern)')
+      .orderBy('relevance', 'DESC')
+      .limit(limit)
+      .offset(offset)
+      .setParameter('queryPattern', `%${query}%`);
+
+    const results = await qb.getRawMany();
+    return results;
   }
 
 }
