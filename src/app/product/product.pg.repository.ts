@@ -10,7 +10,7 @@ export class ProductPgRepository {
     private readonly repo: Repository<ProductPgEntity>,
   ) { }
 
-  async count(): Promise<Number> {
+  async count(): Promise<number> {
     return this.repo.count();
   }
 
