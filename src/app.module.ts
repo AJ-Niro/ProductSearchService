@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleConfig } from './config/typeorm.config';
 import { ProductModule } from './app/product/product.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -31,6 +32,9 @@ import { RedisModule } from '@nestjs-modules/ioredis';
         }
       }),
     }),
+
+    // Initialize cron functionality
+    ScheduleModule.forRoot(),
 
     ProductModule
   ],
