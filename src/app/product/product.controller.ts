@@ -1,5 +1,6 @@
 import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { PaginationResultDto } from 'src/shared/dto';
 
 @Controller('product')
 export class ProductController {
@@ -18,6 +19,13 @@ export class ProductController {
 
     const limit = Number(perPage);
     const offset = (Number(page) - 1) * limit;
-    return await this.productService.search(query, limit, offset);
+    const searchResult = await this.productService.search(query, limit, offset);
+
+    return new PaginationResultDto(
+      searchResult.records,
+      searchResult.count,
+      page,
+      perPage
+    )
   }
 }
