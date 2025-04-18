@@ -88,4 +88,12 @@ export class ProductPgRepository {
     };
   }
 
+  async getAllNames(nameCase?: 'lower' | 'upper'): Promise<{name: string}[]> {
+    const caseFunction = nameCase === 'lower' ? 'LOWER' : nameCase === 'upper' ? 'UPPER' : '';
+
+    return await this.repo.createQueryBuilder('product')
+      .select(`DISTINCT(${caseFunction ? caseFunction + '(product.name)' : 'product.name'})`, 'name')
+      .getRawMany();
+  }
+
 }
