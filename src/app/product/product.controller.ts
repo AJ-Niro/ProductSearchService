@@ -22,8 +22,8 @@ export class ProductController {
     const searchResult = await this.productService.search(query, limit, offset);
 
     return new PaginationResultDto(
-      searchResult.records,
-      searchResult.count,
+      searchResult.items,
+      searchResult.total,
       page,
       perPage
     )

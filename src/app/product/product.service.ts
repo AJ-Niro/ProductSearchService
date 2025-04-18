@@ -12,13 +12,12 @@ export class ProductService {
     query: string,
     limit = 10,
     offset = 0
-  ): Promise<{ count: number; records: ProductPgEntity[] }>
+  ): Promise<{ total: number; items: ProductPgEntity[] }>
   {
-    const count = await this.productRepo.count()
-    const records = await this.productRepo.search(query, limit, offset)
+    const searchResult = await this.productRepo.search(query, limit, offset)
     return {
-      count,
-      records
+      total: searchResult.total,
+      items: searchResult.items
     }
   }
 
