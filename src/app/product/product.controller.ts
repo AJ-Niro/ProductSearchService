@@ -28,4 +28,17 @@ export class ProductController {
       perPage
     )
   }
+
+  @Get('autocomplete')
+  async autocomplete(
+    @Query('prefix') prefix: string,
+    @Query('limit') limitParam?: string,
+  ) {
+    if (!prefix) throw new BadRequestException("q shouldn't be empty")
+    const limit = limitParam === undefined ? 10 : Number(limitParam)
+    const autocompleteOptions = await this.productService.getAutocomplete(prefix, limit)
+    return {
+      items: autocompleteOptions
+    }
+  }
 }

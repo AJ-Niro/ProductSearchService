@@ -41,4 +41,10 @@ export class ProductService {
     await pipeline.exec();
   }
 
+  async getAutocomplete(prefix: string, limit: number = 10): Promise<string[]> {
+    const min = `[${ prefix.toLowerCase() }`;
+    const max = `[${ prefix.toLowerCase() }\xff`;
+    return await this.redis.zrangebylex('autocomplete:products', min, max, 'LIMIT', 0,limit);
+  }
+
 }
