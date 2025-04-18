@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleConfig } from './config/typeorm.config';
 import { ProductModule } from './app/product/product.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
   imports: [
@@ -16,6 +17,21 @@ import { ProductModule } from './app/product/product.module';
 
     // Async TypeORM config using ConfigService
     TypeOrmModule.forRoot(typeOrmModuleConfig),
+
+    // Redis module configuration
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'single',
+        options: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          password: configService.get<string>('REDIS_PASSWORD'),
+        }
+      }),
+    }),
+
     ProductModule
   ],
   controllers: [AppController],
