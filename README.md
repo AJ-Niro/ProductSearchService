@@ -1,98 +1,320 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Product Search Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of content
 
-## Description
+- [Project Overview](#project-overview)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the application](#running-the-application)
+  - [Available NPM Scripts](#available-npm-scripts)
+- [API Documentation](#api-documentation)
+  - [GET /product/search](#get-productsearch)
+  - [GET /product/suggestion](#get-productsuggestion)
+  - [GET /product/autocomplete](#get-productautocomplete)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+  - [Folder Overview](#folder-overview)
+  - [Postgresql Database Schema](#postgresql-database-schema)
+- [Future Improvements](#future-improvements)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Project Overview
 
-## Project setup
+This project is a NestJS-based backend API that provides an advanced and scalable search functionality for products. The goal is to deliver fast and relevant search results across product names, categories, and locations.
+
+Key highlights of the system include:
+
+- Autocomplete suggestions using Redis
+
+- Relevance-based ranking to prioritize the most relevant results
+
+- Alternative query suggestions to guide users when no or few results are found
+
+- Modular, clean, and maintainable architecture
+
+- Full support for Docker-based deployment
+
+## Tech Stack
+
+- **NestJS** – Progressive Node.js framework for building efficient and scalable server-side applications
+
+- **PostgreSQL** – Relational database used for persistent storage of product data
+
+- **Redis** – In-memory data store used for caching and speeding up autocomplete suggestions
+
+- **Docker** – Containerization for consistent development and deployment environments
+
+## Getting Started
+
+Follow these steps to get the project up and running locally or using Docker.
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- **Node.js** (v20 or higher)
+
+- **Docker** (for Dockerized setup)
+
+- **Docker** Compose (if using Docker)
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-$ npm install
+git clone https://github.com/AJ-Niro/ProductSearchService.git
+cd ProductSearchService
 ```
 
-## Compile and run the project
+2. **Copy default environment variables**
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cp .env.example .env
 ```
 
-## Run tests
+3. **Install dependencies**
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### Database Setup
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. **Migrations** are handled using `@nestjs/typeorm` and configured in the project.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- To run migrations:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+  npm run migration:run
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. **Seeding with Fake Data** is available via a custom factory script:
 
-## Resources
+- To populate PostgreSQL with demo/fake data:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+   npm run factory <entity> <number_of_records>
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- The available entities are:
+  - **location**
+  - **category**
+  - **product**
 
-## Support
+### Running the application
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Option 1: Local Development (Preferred)**
 
-## Stay in touch
+1. Start PostgreSQL and Redis using the development infra file:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+  docker compose -f ./docker/docker-compose.infra.yml up -d
+```
 
-## License
+2. Start the NestJS app:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+   - The API will be running at http://localhost:3000
+
+```bash
+  npm run start:dev
+```
+
+**Option 2: Production Mode (Dockerized)**
+
+- Docker is configured for production deployment only.
+
+1.  Make sure that have previously configure and a postgresql and redis instance
+
+2.  Build and start the container:
+
+```bash
+docker compose --env-file .env -f docker/docker-compose.app.yml up
+```
+
+### Available NPM Scripts
+
+| Script           | Description                                                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| build            | Compiles the NestJS project using the Nest CLI.                                                                                                 |
+| format           | Formats all TypeScript files in `src` and `test` directories using Prettier.                                                                    |
+| start            | Starts the NestJS application in production mode.                                                                                               |
+| start:dev        | Starts the application in development mode with file watching for auto-reload.                                                                  |
+| start:debug      | Starts the application in debug mode with auto-reload support.                                                                                  |
+| start:prod       | Runs the compiled application directly with Node.js (typically for production).                                                                 |
+| typeorm:cli      | Runs the TypeORM CLI with TypeScript and path alias support.                                                                                    |
+| migration:create | Creates a new database migration. Pass the name via `--name=MigrationName`.                                                                     |
+| migration:run    | Runs all pending database migrations using the provided data source.                                                                            |
+| migration:revert | Reverts the last executed migration.                                                                                                            |
+| migration:show   | Lists all pending migrations that have not yet been run.                                                                                        |
+| factory          | Runs the database factory script to populate initial data. Requires two parameters: entity name and count (e.g., `npm run factory category 5`). |
+| lint             | Lints TypeScript files across project directories and applies auto-fixes.                                                                       |
+| test             | Runs the project's unit tests using Jest.                                                                                                       |
+| test:watch       | Runs tests in watch mode, re-running them on file changes.                                                                                      |
+| test:cov         | Runs tests and reports test coverage.                                                                                                           |
+| test:debug       | Runs Jest in debug mode for step-by-step test debugging.                                                                                        |
+| test:e2e         | Executes end-to-end (e2e) tests using the specified Jest configuration.                                                                         |
+
+## API Documentation
+
+### `GET /product/search`
+
+Search products by query with pagination.
+
+**Query Parameters**
+
+| Name       | Type   | Require | Description                  |
+| ---------- | ------ | ------- | ---------------------------- |
+| `q`        | string | yes     | The search query             |
+| `page`     | number | no      | Page number (default: 1)     |
+| `per_page` | number | no      | Items per page (default: 10) |
+
+**Example Response**
+
+```json
+{
+  "items": [
+    // array of products found
+  ],
+  "meta": {
+    "totalItems": 4,
+    "itemCount": 4,
+    "itemsPerPage": "10",
+    "totalPages": 1,
+    "currentPage": "1"
+  }
+}
+```
+
+### `GET /product/suggestion`
+
+Get alternative search suggestions based on a query.
+
+**Query Parameters**
+
+| Name    | Type   | Require | Description                                 |
+| ------- | ------ | ------- | ------------------------------------------- |
+| `q`     | string | yes     | The search query                            |
+| `limit` | number | no      | Maximum number of suggestions (default: 10) |
+
+**Example Response**
+
+```json
+{
+  "items": [
+    /* array of suggestion strings */
+  ]
+}
+```
+
+### `GET /product/autocomplete`
+
+Get autocomplete suggestions by prefix using Redis.
+
+**Query Parameters**
+
+| Name     | Type   | Require | Description                                 |
+| -------- | ------ | ------- | ------------------------------------------- |
+| `prefix` | string | yes     | Partial input from user                     |
+| `limit`  | number | no      | Maximum number of suggestions (default: 10) |
+
+**Example Response**
+
+```json
+{
+  "items": [
+    /* array of autocomplete suggestions strings */
+  ]
+}
+```
+
+## Configuration
+
+The application is configured using environment variables. A `.example.env` file is provided in the project root as a template.
+
+**Example `.example.env` File**
+
+```.env
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=ProductSearchService
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=password
+```
+
+**To get started**, copy this file and rename it to .env, then adjust values as needed:
+
+```bash
+cp .example.env .env
+```
+
+### Caching Strategy
+
+To optimize autocomplete performance, the application uses Redis to cache frequently searched prefixes.
+
+- The cache is updated automatically every 30 seconds using a background cronjob.
+
+- This ensures autocomplete data stays in sync with the PostgreSQL product records without adding write-time overhead.
+
+- Redis TTLs are not used, as updates are handled by the scheduled task.
+
+- You can find the implementation under `src/product/product.service.ts` on the `populateAutocompleteCache` method
+
+## Project Structure
+
+### Folder Overview
+
+```
+.
+├── docker/                       # Docker-related files (Dockerfile, docker-compose)
+│   ├── Dockerfile                # Production Dockerfile
+│   ├── .dockerignore             # Ignore files
+│   ├── docker-compose.app.yml    # Compose file for production
+│   └── docker-compose.infra.yml  # Compose file for local infra (PostgreSQL, Redis)
+├── src/
+│   ├── app/                      # Application modules (product, category, location)
+│   │   ├── product/
+│   │   ├── category/
+│   │   └── location/
+│   ├── config/                   # Application configuration (e.g., database config)
+│   ├── database/                 # DB migrations and factories for test/fake data
+│   │   ├── migrations/
+│   │   └── factory/
+│   ├── shared/                   # Reusable utilities.
+│   ├── main.ts                   # Application entry point
+│   └── app.module.ts             # Root module definition
+├── test/                         # Unit and e2e tests
+├── .example.env                  # Example environment configuration
+└── README.md
+```
+
+### Postgresql Database Schema
+
+![Postgresql Database Schema](./doc/product_search_db_schema.png)
+
+## Future Improvements
+
+- Full-Text Search with Weights:
+Enhance relevance ranking using PostgreSQL’s full-text search features like tsvector, tsquery, and custom weighting by field (e.g., boost name over location).
+
+- Advanced Filtering Capabilities:
+Support dynamic filters (e.g., by category, price range, location radius) to improve the search experience.
+
+- Multi-language Support:
+Add localization support for product names, categories, and suggestions to support international users.
+
+- User Search History & Analytics:
+Store anonymized query logs for analytics, suggestion training, or ranking adjustments.
+
+- Unit & Integration Test Coverage:
+Expand test coverage, especially for search ranking logic, pagination, and caching mechanisms.
+
+- CI/CD Pipeline:
+Set up GitHub Actions or similar tools for automated testing, linting, and deployment to staging/production environments.
