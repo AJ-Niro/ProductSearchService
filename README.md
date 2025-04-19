@@ -112,7 +112,7 @@ npm install
 1. Start PostgreSQL and Redis using the development infra file:
 
 ```bash
-  docker compose -f ./docker/docker-compose.infra.yml up -d
+  docker compose --env-file .env -f docker/docker-compose.infra.yml up -d
 ```
 
 2. Start the NestJS app:
