@@ -1,8 +1,9 @@
 import AppDataSource from '../../config/typeorm.data-source';
+import { DataSource } from 'typeorm';
 
 const factories: Record<
   string,
-  (dataSource: any, count: number) => Promise<void>
+  (dataSource: DataSource, count: number) => Promise<void>
 > = {
   category: async (dataSource, count) => {
     const { createCategory } = await import('./category.factory');
@@ -36,4 +37,4 @@ const run = async () => {
   process.exit(0);
 };
 
-run();
+void run();
