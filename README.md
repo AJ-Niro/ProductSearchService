@@ -73,7 +73,7 @@ cd ProductSearchService
 2. **Copy default environment variables**
 
 ```bash
-cp .env.example .env
+cp .example.env .env
 ```
 
 3. **Install dependencies**
