@@ -10,4 +10,4 @@ import { ProductPgRepository } from './product.pg.repository';
   controllers: [ProductController],
   providers: [ProductService, ProductPgRepository],
 })
-export class ProductModule { }
+export class ProductModule {}

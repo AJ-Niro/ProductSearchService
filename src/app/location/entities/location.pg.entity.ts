@@ -1,20 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
-import ProductPgEntity from '../../product/entities/product.pg.entity'
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import ProductPgEntity from '../../product/entities/product.pg.entity';
 
 @Entity('location')
 export default class LocationPgEntity {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
-  id: number
+  id: number;
 
   @Column({
     type: 'varchar',
-    length: 100
+    length: 100,
   })
-  name: string
-
+  name: string;
 
   @OneToMany(() => ProductPgEntity, (product) => product.category)
-  products: ProductPgEntity[]
+  products: ProductPgEntity[];
 }

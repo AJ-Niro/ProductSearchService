@@ -12,18 +12,18 @@ export class ProductService {
   constructor(
     private readonly productRepo: ProductPgRepository,
     @InjectRedis() private readonly redis: Redis,
-  ) { }
+  ) {}
 
   async search(
     query: string,
     limit = 10,
-    offset = 0
+    offset = 0,
   ): Promise<{ total: number; items: ProductPgEntity[] }> {
-    const searchResult = await this.productRepo.search(query, limit, offset)
+    const searchResult = await this.productRepo.search(query, limit, offset);
     return {
       total: searchResult.total,
-      items: searchResult.items
-    }
+      items: searchResult.items,
+    };
   }
 
   @Cron(CronExpression.EVERY_30_SECONDS)
@@ -34,7 +34,7 @@ export class ProductService {
 
     const pipeline = this.redis.pipeline();
 
-    const productNames = await this.productRepo.getAllNames('lower')
+    const productNames = await this.productRepo.getAllNames('lower');
     for (const product of productNames) {
       pipeline.zadd('autocomplete:products', 0, product.name);
     }
@@ -42,13 +42,19 @@ export class ProductService {
   }
 
   async getAutocomplete(prefix: string, limit: number = 10): Promise<string[]> {
-    const min = `[${ prefix.toLowerCase() }`;
-    const max = `[${ prefix.toLowerCase() }\xff`;
-    return await this.redis.zrangebylex('autocomplete:products', min, max, 'LIMIT', 0,limit);
+    const min = `[${prefix.toLowerCase()}`;
+    const max = `[${prefix.toLowerCase()}\xff`;
+    return await this.redis.zrangebylex(
+      'autocomplete:products',
+      min,
+      max,
+      'LIMIT',
+      0,
+      limit,
+    );
   }
 
   async getNameSuggestion(query: string, limit: number) {
-    return await this.productRepo.getNameSuggestion(query, limit)
+    return await this.productRepo.getNameSuggestion(query, limit);
   }
-
 }

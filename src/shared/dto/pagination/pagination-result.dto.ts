@@ -2,7 +2,6 @@ import { ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationMetaDto } from './pagination-meta.dto';
 
-
 export class PaginationResultDto<T> {
   @IsArray()
   items: T[];
@@ -20,7 +19,7 @@ export class PaginationResultDto<T> {
       items.length,
       per_page,
       totalPages,
-      page
+      page,
     );
   }
 }

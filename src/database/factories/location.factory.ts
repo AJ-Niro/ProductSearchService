@@ -10,6 +10,8 @@ function makeLocation(): LocationPgEntity {
 
 export async function createLocation(dataSource: DataSource, count: number) {
   const locationRepository = dataSource.getRepository(LocationPgEntity);
-  const locations: LocationPgEntity[] = Array.from({ length: count }).map(() => makeLocation());
+  const locations: LocationPgEntity[] = Array.from({ length: count }).map(() =>
+    makeLocation(),
+  );
   await locationRepository.save(locations);
 }

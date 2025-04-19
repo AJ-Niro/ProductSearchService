@@ -10,6 +10,8 @@ function makeCategory(): CategoryPgEntity {
 
 export async function createCategory(dataSource: DataSource, count: number) {
   const categoryRepository = dataSource.getRepository(CategoryPgEntity);
-  const categories: CategoryPgEntity[] = Array.from({ length: count }).map(() => makeCategory());
+  const categories: CategoryPgEntity[] = Array.from({ length: count }).map(() =>
+    makeCategory(),
+  );
   await categoryRepository.save(categories);
 }

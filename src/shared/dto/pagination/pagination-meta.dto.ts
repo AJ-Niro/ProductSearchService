@@ -26,7 +26,7 @@ export class PaginationMetaDto {
     itemCount: number,
     itemsPerPage: number,
     totalPages: number,
-    currentPage: number
+    currentPage: number,
   ) {
     this.totalItems = totalItems;
     this.itemCount = itemCount;
@@ -35,4 +35,3 @@ export class PaginationMetaDto {
     this.currentPage = currentPage;
   }
 }
-

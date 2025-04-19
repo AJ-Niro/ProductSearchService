@@ -10,8 +10,7 @@ const {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_DB,
-} = process.env
-
+} = process.env;
 
 const commonConfig: DataSourceOptions = {
   type: 'postgres',

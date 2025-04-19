@@ -29,16 +29,16 @@ import { ScheduleModule } from '@nestjs/schedule';
           host: configService.get<string>('REDIS_HOST'),
           port: configService.get<number>('REDIS_PORT'),
           password: configService.get<string>('REDIS_PASSWORD'),
-        }
+        },
       }),
     }),
 
     // Initialize cron functionality
     ScheduleModule.forRoot(),
 
-    ProductModule
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

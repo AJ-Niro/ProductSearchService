@@ -1,6 +1,9 @@
 import AppDataSource from '../../config/typeorm.data-source';
 
-const factories: Record<string, (dataSource: any, count: number) => Promise<void>> = {
+const factories: Record<
+  string,
+  (dataSource: any, count: number) => Promise<void>
+> = {
   category: async (dataSource, count) => {
     const { createCategory } = await import('./category.factory');
     await createCategory(dataSource, count);
@@ -21,7 +24,9 @@ const run = async () => {
   const recordsQuantity = quantityArg ? parseInt(quantityArg, 10) : 10;
 
   if (!entityNameArg || !factories[entityNameArg]) {
-    console.error(`Usage: npm run factory <entity> [count]\nAvailable: ${Object.keys(factories).join(', ')}`);
+    console.error(
+      `Usage: npm run factory <entity> [count]\nAvailable: ${Object.keys(factories).join(', ')}`,
+    );
     process.exit(1);
   }
 
