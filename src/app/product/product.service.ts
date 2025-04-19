@@ -47,4 +47,8 @@ export class ProductService {
     return await this.redis.zrangebylex('autocomplete:products', min, max, 'LIMIT', 0,limit);
   }
 
+  async getNameSuggestion(query: string, limit: number) {
+    return await this.productRepo.getNameSuggestion(query, limit)
+  }
+
 }

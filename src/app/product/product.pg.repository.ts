@@ -96,4 +96,17 @@ export class ProductPgRepository {
       .getRawMany();
   }
 
+  async getNameSuggestion(query: string, limit: number): Promise<{ name: string }[]> {
+    return await this.repo.createQueryBuilder('product')
+      .select('DISTINCT ON (product.name) product.name', 'name')
+      .where("similarity(product.name, :search) > :threshold", {
+        search: query,
+        threshold: 0.3,
+      })
+      .orderBy('product.name')
+      .addOrderBy('similarity(product.name, :search)', 'DESC')
+      .setParameter('search', query)
+      .limit(limit)
+      .getRawMany();
+  }
 }

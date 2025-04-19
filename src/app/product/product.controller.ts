@@ -41,4 +41,18 @@ export class ProductController {
       items: autocompleteOptions
     }
   }
+
+  @Get('suggestion')
+  async suggestion(
+    @Query('q') query: string,
+    @Query('limit') limitParam = 10,
+  ) {
+    if (!query) throw new BadRequestException("q shouldn't be empty")
+    const limit = Number(limitParam);
+    const suggestions = await this.productService.getNameSuggestion(query, limit)
+    const nameSuggestions =  suggestions.map((suggestion) => suggestion.name)
+    return {
+      items: nameSuggestions
+    }
+  }
 }
