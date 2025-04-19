@@ -84,7 +84,13 @@ npm install
 
 ### Database Setup
 
-1. **Migrations** are handled using `@nestjs/typeorm` and configured in the project.
+1. Start PostgreSQL and Redis using the development infra file:
+
+```bash
+  docker compose --env-file .env -f docker/docker-compose.infra.yml up -d
+```
+
+2. **Migrations** are handled using `@nestjs/typeorm` and configured in the project.
 
 - To run migrations:
 
@@ -92,7 +98,7 @@ npm install
   npm run migration:run
 ```
 
-2. **Seeding with Fake Data** is available via a custom factory script:
+3. **Seeding with Fake Data** is available via a custom factory script:
 
 - To populate PostgreSQL with demo/fake data:
 
@@ -109,13 +115,7 @@ npm install
 
 **Option 1: Local Development (Preferred)**
 
-1. Start PostgreSQL and Redis using the development infra file:
-
-```bash
-  docker compose --env-file .env -f docker/docker-compose.infra.yml up -d
-```
-
-2. Start the NestJS app:
+1. Start the NestJS app:
 
    - The API will be running at http://localhost:3000
 
